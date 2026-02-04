@@ -11,7 +11,7 @@ dotenv.config();
 
 const app = express();
 app.use(helmet());
-app.use(cors({ origin: process.env.CORS_ORIGIN || "http://localhost:5173" }));
+app.use(cors({ origin: process.env.CORS_ORIGIN || "https://smart-grocery-ganavi.netlify.app" }));
 app.use(express.json({ limit: "2mb" }));
 app.use(morgan("dev"));
 
