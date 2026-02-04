@@ -70,10 +70,8 @@ To run both frontend and backend using Docker Compose:
 - Backend: Configure database and JWT secrets in `api/src/config/db.js` or via environment variables.
 - Frontend: API endpoint configuration in `web/src/api/client.js`.
 
-## Contributing
-Pull requests are welcome! For major changes, please open an issue first to discuss what you would like to change.
-
 ## License
 This project is licensed under the MIT License.
 # Smart-Grocery
+
 
