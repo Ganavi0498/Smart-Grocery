@@ -59,6 +59,7 @@ export default function AppLayout() {
     { label: "Inventory", path: "/inventory" },
     { label: "Alerts", path: "/alerts" },
     { label: "Grocery List", path: "/grocery" },
+    { label: "Notifications", path: "/notifications" }, // ✅ ADDED
     { label: "Household", path: "/household" },
   ];
 
@@ -146,11 +147,7 @@ export default function AppLayout() {
                 );
               })}
 
-              <Divider
-                orientation="vertical"
-                flexItem
-                sx={{ mx: 1.4, borderColor: "rgba(43,43,35,0.12)" }}
-              />
+              <Divider orientation="vertical" flexItem sx={{ mx: 1.4, borderColor: "rgba(43,43,35,0.12)" }} />
 
               <Typography sx={accountPillSx} title={displayName}>
                 Hi, {displayName}
