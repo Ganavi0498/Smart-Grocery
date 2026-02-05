@@ -54,12 +54,25 @@ export default function AppLayout() {
     return "User";
   }, [user]);
 
+  // Compute unread notifications count from localStorage (set by Notifications page)
+  const unreadCount = useMemo(() => {
+    try {
+      const raw = localStorage.getItem("sg_notifications");
+      if (!raw) return 0;
+      const arr = JSON.parse(raw);
+      if (!Array.isArray(arr)) return 0;
+      return arr.filter((n) => !n.readAt).length;
+    } catch {
+      return 0;
+    }
+  }, [location.pathname]);
+
   const links = [
     { label: "Dashboard", path: "/dashboard" },
     { label: "Inventory", path: "/inventory" },
     { label: "Alerts", path: "/alerts" },
     { label: "Grocery List", path: "/grocery" },
-    { label: "Notifications", path: "/notifications" }, // ✅ ADDED
+    { label: "Notifications", path: "/notifications", badge: unreadCount },
     { label: "Household", path: "/household" },
   ];
 
@@ -139,10 +152,34 @@ export default function AppLayout() {
                       ...navBtnSx,
                       borderBottom: active ? "2px solid rgba(120,140,20,0.95)" : "2px solid transparent",
                       borderRadius: 0,
+                      position: "relative",
                     }}
                     onClick={() => navigate(l.path)}
                   >
                     {l.label}
+                    {l.badge > 0 && (
+                      <Box
+                        sx={{
+                          position: "absolute",
+                          top: -6,
+                          right: -12,
+                          background: "#e53935",
+                          color: "#fff",
+                          borderRadius: "50%",
+                          minWidth: 22,
+                          height: 22,
+                          fontSize: 13,
+                          fontWeight: 900,
+                          display: "flex",
+                          alignItems: "center",
+                          justifyContent: "center",
+                          boxShadow: "0 2px 6px rgba(0,0,0,0.12)",
+                          zIndex: 2,
+                        }}
+                      >
+                        {l.badge}
+                      </Box>
+                    )}
                   </Button>
                 );
               })}
@@ -192,9 +229,32 @@ export default function AppLayout() {
                   setOpen(false);
                   navigate(l.path);
                 }}
-                sx={{ borderRadius: 2 }}
+                sx={{ borderRadius: 2, position: "relative" }}
               >
                 <ListItemText primary={l.label} />
+                {l.badge > 0 && (
+                  <Box
+                    sx={{
+                      position: "absolute",
+                      top: 8,
+                      right: 18,
+                      background: "#e53935",
+                      color: "#fff",
+                      borderRadius: "50%",
+                      minWidth: 22,
+                      height: 22,
+                      fontSize: 13,
+                      fontWeight: 900,
+                      display: "flex",
+                      alignItems: "center",
+                      justifyContent: "center",
+                      boxShadow: "0 2px 6px rgba(0,0,0,0.12)",
+                      zIndex: 2,
+                    }}
+                  >
+                    {l.badge}
+                  </Box>
+                )}
               </ListItemButton>
             ))}
 

@@ -51,7 +51,10 @@ export default function Notifications() {
       }
 
       const res = await apiRequest("/api/notifications", { method: "GET", token });
-      setItems(Array.isArray(res?.items) ? res.items : []);
+      const itemsArr = Array.isArray(res?.items) ? res.items : [];
+      setItems(itemsArr);
+      // Store notifications in localStorage for badge count
+      localStorage.setItem("sg_notifications", JSON.stringify(itemsArr));
     } catch (e) {
       showToast(e?.message || "Failed to load notifications", "error");
     } finally {
@@ -131,9 +134,11 @@ export default function Notifications() {
       const res = await apiRequest(`/api/notifications/${id}/read`, { method: "PATCH", token });
       const updated = res?.item;
 
-      setItems((prev) =>
-        prev.map((n) => (n._id === id ? { ...n, ...(updated || {}), readAt: updated?.readAt || new Date().toISOString() } : n))
-      );
+      setItems((prev) => {
+        const next = prev.map((n) => (n._id === id ? { ...n, ...(updated || {}), readAt: updated?.readAt || new Date().toISOString() } : n));
+        localStorage.setItem("sg_notifications", JSON.stringify(next));
+        return next;
+      });
     } catch (e) {
       showToast(e?.message || "Failed to mark as read", "error");
     } finally {
@@ -145,7 +150,11 @@ export default function Notifications() {
     setBusy(true);
     try {
       await apiRequest(`/api/notifications/${id}/dismiss`, { method: "PATCH", token });
-      setItems((prev) => prev.filter((n) => n._id !== id));
+      setItems((prev) => {
+        const next = prev.filter((n) => n._id !== id);
+        localStorage.setItem("sg_notifications", JSON.stringify(next));
+        return next;
+      });
     } catch (e) {
       showToast(e?.message || "Failed to dismiss", "error");
     } finally {
